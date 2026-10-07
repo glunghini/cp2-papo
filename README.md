@@ -339,14 +339,14 @@ Se o cadastro falhar depois de criar a conta no Authentication, a conta é apaga
 
 | Login | Cadastro | Conversas |
 |---|---|---|
-| ![Login](docs/prints/login.jpeg) | ![Cadastro](docs/prints/cadastro.jpeg) | ![Conversas](docs/prints/conversas.jpeg) |
+| ![Login](docs/prints/login.jpeg) | ![Cadastro](docs/prints/cadastro.jpg) | ![Conversas](docs/prints/conversas.jpg) |
 
 | Chat em grupo | Criação de grupo | Perfil |
 |---|---|---|
-| ![Chat](docs/prints/chat-grupo.jpeg) | ![Grupo](docs/prints/grupo-form.jpeg) | ![Perfil](docs/prints/perfil.jpeg) |
+| ![Chat](docs/prints/chat-grupo.jpg) | ![Grupo](docs/prints/grupo-form.jpg) | ![Perfil](docs/prints/perfil.jpg) |
 
 ## Evidência de notificação
 
 | Push recebido com o app fechado | Conversa aberta pelo toque |
 |---|---|
-| ![Push](docs/prints/push-recebido.jpeg) | ![Toque](docs/prints/push-abriu-conversa.jpeg) |
+| ![Push](docs/prints/push-recebido.jpg) | ![Toque](docs/prints/push-abriu-conversa.jpg) |
