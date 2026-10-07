@@ -4,9 +4,11 @@ Aplicativo de chat em React Native com conversas individuais e em grupo. Usa Fir
 
 ## Integrantes
 
-- RM00000 — Nome Completo
-- RM00000 — Nome Completo
-- RM00000 — Nome Completo
+- David Alexandre Cordeiro Paixão – RM 557538
+- Guilherme Lunghini Teixeira – RM 556892
+- Marchel Augusto Ribeiro de Matos – RM 99856-
+- Tiago Morais Neto – RM 555619
+- Vinicius Augusto Siqueira Gonçalves – RM 557065
 
 ## Links da entrega
 
