@@ -1,0 +1,26 @@
+node_modules/
+.expo/
+dist/
+web-build/
+ios/
+android/
+*.tsbuildinfo
+
+# variáveis locais (os modelos ficam em .env.example)
+.env
+.env.local
+server/.env
+
+# credenciais administrativas nunca vão para o repositório
+serviceAccountKey*.json
+firebaseAdminCredentials*.json
+*-firebase-adminsdk-*.json
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+
+npm-debug.log*
+yarn-error.log*
+.DS_Store

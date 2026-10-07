@@ -1,0 +1,121 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isValidPhotoUrl(value) {
+      return value is string
+        && value.size() <= 2048
+        && (value == '' || value.matches('^https://.*'));
+    }
+
+    function isValidPublicProfile(data, uid) {
+      return data.keys().hasOnly(['uid', 'name', 'photoUrl', 'createdAt'])
+        && data.uid == uid
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 60
+        && isValidPhotoUrl(data.photoUrl)
+        && data.createdAt is int;
+    }
+
+    function isValidPrivateProfile(data) {
+      return data.keys().hasOnly(['email', 'phoneNumber', 'birthDate'])
+        && data.email is string && data.email == request.auth.token.email
+        && data.phoneNumber is string && data.phoneNumber.size() <= 20
+        && data.birthDate is string && data.birthDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
+    function isValidDevice(data) {
+      return data.keys().hasOnly(['token', 'platform', 'enabled', 'updatedAt'])
+        && data.token is string && data.token.size() > 0 && data.token.size() <= 300
+        && data.platform in ['ios', 'android']
+        && data.enabled is bool
+        && data.updatedAt is int;
+    }
+
+    function isValidDirectConversation(conversationId, data) {
+      let ids = data.participantIds;
+      return data.keys().hasOnly(['participantIds', 'createdAt'])
+        && ids is list && ids.size() == 2
+        && ids[0] is string && ids[1] is string
+        && ids[0] < ids[1]
+        && request.auth.uid in ids
+        && conversationId == 'direct_' + ids[0] + '_' + ids[1]
+        && exists(/databases/$(database)/documents/users/$(ids[0]))
+        && exists(/databases/$(database)/documents/users/$(ids[1]))
+        && data.createdAt is int;
+    }
+
+    // Integrantes (memberIds) não aparecem aqui de propósito: só a API altera essa lista.
+    // O limite continua conferido contra o estado atual do documento no momento do commit.
+    function isValidGroupUpdate(before, after) {
+      return after.diff(before).affectedKeys().hasOnly([
+          'name', 'photoUrl', 'memberLimit', 'notificationPolicy',
+          'policyUpdatedBy', 'policyUpdatedAt', 'updatedAt'
+        ])
+        && after.name is string && after.name.trim().size() >= 1 && after.name.size() <= 60
+        && isValidPhotoUrl(after.photoUrl)
+        && after.memberLimit is int
+        && after.memberLimit >= 2 && after.memberLimit <= 50
+        && after.memberLimit >= after.memberIds.size()
+        && after.notificationPolicy in ['all_group_messages', 'mentioned_members', 'direct_messages_only', 'disabled']
+        && after.updatedAt is int
+        && (
+          after.notificationPolicy == before.notificationPolicy
+          || (after.policyUpdatedBy == request.auth.uid && after.policyUpdatedAt is int)
+        );
+    }
+
+    // Perfil público: nome e foto, necessários para a lista de usuários.
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isUser(uid) && isValidPublicProfile(request.resource.data, uid);
+      allow update: if isUser(uid)
+        && isValidPublicProfile(request.resource.data, uid)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false;
+
+      // E-mail, celular e nascimento. Outros usuários só leem pela API,
+      // que confere se existe conversa ou grupo em comum.
+      match /private/{docId} {
+        allow read: if isUser(uid);
+        allow create, update: if isUser(uid) && docId == 'profile' && isValidPrivateProfile(request.resource.data);
+        allow delete: if false;
+      }
+
+      // Tokens de push ficam visíveis apenas para o próprio dono.
+      match /devices/{deviceId} {
+        allow read, delete: if isUser(uid);
+        allow create, update: if isUser(uid) && isValidDevice(request.resource.data);
+      }
+    }
+
+    match /directConversations/{conversationId} {
+      allow get: if signedIn() && request.auth.uid in conversationId.split('_');
+      allow list: if signedIn() && request.auth.uid in resource.data.participantIds;
+      allow create: if signedIn() && isValidDirectConversation(conversationId, request.resource.data);
+      allow update, delete: if false;
+    }
+
+    match /groups/{groupId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.memberIds;
+      allow update: if signedIn()
+        && resource.data.ownerId == request.auth.uid
+        && isValidGroupUpdate(resource.data, request.resource.data);
+      // criação e mudança de integrantes passam pela API
+      allow create, delete: if false;
+    }
+
+    // Controle de idempotência das notificações, usado apenas pela API.
+    match /notificationDispatches/{dispatchId} {
+      allow read, write: if false;
+    }
+  }
+}

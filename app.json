@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Papo",
+    "slug": "papo-chat",
+    "scheme": "papo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.equipe.papo",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.equipe.papo",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#2B4C7E"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O Papo usa suas fotos para definir a imagem do perfil e dos grupos.",
+          "cameraPermission": "O Papo usa a camera para tirar a foto do perfil e dos grupos."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e86e9fc6-3cbf-4839-9ecf-3bf84ec36030"
+      }
+    },
+    "owner": "guilhermelunghini"
+  }
+}

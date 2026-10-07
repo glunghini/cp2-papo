@@ -1,0 +1,9 @@
+{
+  "apiKey": "AIzaSyCxuNBonKKBueWMQJGNC_k8nsRF7RlfQCE",
+  "authDomain": "cp2-spider.firebaseapp.com",
+  "databaseURL": "https://cp2-spider-default-rtdb.firebaseio.com",
+  "projectId": "cp2-spider",
+  "storageBucket": "cp2-spider.firebasestorage.app",
+  "messagingSenderId": "899749995302",
+  "appId": "1:899749995302:web:f18d38fd1a68e14a8097e7"
+}
