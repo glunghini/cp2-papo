@@ -10,7 +10,7 @@ Aplicativo de chat em React Native com conversas individuais e em grupo. Usa Fir
 
 ## Links da entrega
 
-- Repositório: https://github.com/SEU-USUARIO/papo
+- Repositório: https://github.com/glunghini/cp2-papo
 - API online: https://papo-api.onrender.com
 - Health check: https://papo-api.onrender.com/health
 
@@ -54,7 +54,7 @@ Versão do Expo: SDK 55 (`expo ~55.0.0`).
 ```text
 .
 ├── App.tsx
-├── app.config.ts            configuração do Expo (plugins, FCM, projectId do EAS)
+├── app.json            configuração do Expo (plugins, FCM, projectId do EAS)
 ├── eas.json                 perfis de build
 ├── firebaseConfig.json      configuração do SDK cliente (sem segredos)
 ├── firebase.json            aponta para as regras abaixo
@@ -101,7 +101,7 @@ As notificações não funcionam no Expo Go, então o app roda como development 
 ```bash
 npm install -g eas-cli
 eas login
-eas init                                  # gera o projectId; cole no app.config.ts
+eas init                                  # gera o projectId; cole no app.json
 eas build --profile development --platform android
 ```
 
